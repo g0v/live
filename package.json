@@ -1,0 +1,22 @@
+{
+  "author": "Jeff Hung",
+  "name": "g0v.live",
+  "description": "http://g0v.github.io/live/",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/g0v/live"
+  },
+  "engines": {
+    "node": "0.10.x",
+    "npm": "1.2.x"
+  },
+  "scripts": {
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+    "googleapis": "~0.6.1"
+  }
+}
+

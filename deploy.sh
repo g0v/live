@@ -9,7 +9,7 @@ if [ `git rev-list HEAD...$upstream/master --count` -ne 0 ]; then
   echo "not deploying"
   exit 1
 fi
-#npm i
+npm install
 #cp app/index.static.jade app/404.static.jade
 rm -rf _public
 # XXX: use --reference when not in shallow clone
