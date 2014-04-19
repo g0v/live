@@ -12,16 +12,29 @@
     <link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
   </head>
   <body>
-    <div>
-      <span class="glyphicon glyphicon-wrench"></span>
-      <span>回報影片狀態</span>
-      <button type="button" class="btn btn-success">正常</button>
-      <button type="button" class="btn btn-warning">延遲</button>
-      <button type="button" class="btn btn-warning">無聲音</button>
-      <button type="button" class="btn btn-warning">左右上下顛倒</button>
-      <button type="button" class="btn btn-danger">無畫面</button>
+      <div class="btn-group" style="float: left; margin-right: 6px;">
+        <button type="button" class="btn btn-default">
+          <span class="glyphicon glyphicon-hand-right"></span> 回報錯誤
+        </button>
+        <button type="button" class="btn btn-warning">延遲</button>
+        <button type="button" class="btn btn-warning">模糊</button>
+        <button type="button" class="btn btn-warning">無聲音</button>
+        <button type="button" class="btn btn-danger">無畫面</button>
+      </div>
+      <div class="btn-group" style="float: left;">
+        <button type="button" class="btn btn-default">
+          <span class="glyphicon glyphicon-thumbs-up"></span> 99
+        </button>
+        <button type="button" class="btn btn-default">
+          <span class="glyphicon glyphicon-share"></span> 分享
+        </button>
+      </div>
+      <div class="btn-group" style="float: right">
+        <button type="button" class="btn btn-default">
+          <span class="glyphicon glyphicon-check"></span> 訂閱
+        </button>
+      </div>
     </div>
-    <div class="span pull-right">Subscribe Video Status</div>
   </body>
 </html>
 
