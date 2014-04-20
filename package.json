@@ -11,12 +11,11 @@
     "node": "0.10.x",
     "npm": "1.2.x"
   },
-  "scripts": {
-  },
+  "scripts": {},
   "dependencies": {
+    "async": "~0.7.0"
   },
   "devDependencies": {
     "googleapis": "~0.6.1"
   }
 }
-
