@@ -1,23 +1,18 @@
 var http = require('http'),
-    async = require('async');
+    async = require('async'),
+    fs = require('fs');
 var Firebase = require('firebase');
 
-var channel = {
-  youtube: [
-    'yuting1987',               // 宇庭
-    'indietaiwan',              // 大帝音地
-    'UC6BgDThjkr6sEOovgcrvXjQ', // Pei-Che Chang
-    'g0vtw'                     // G0V
-  ],
-  ustream: [
-    '17831478',                 // Appendectomy Project 割闌尾計畫
-    'art1025',                  // 公投盟
-    'nonukestw'                 // 不要核四、五六運動
-  ]
+if ( !fs.existsSync('database.json') ) {
+    fs.linkSync('database-sample.json', 'database.json');
 }
 
-var twlive = new Firebase('https://twlive.firebaseio.com/');
-twlive.auth('oFqJQgFQujCDzQno7a88OsD54tzOEHTIGs9ltlcS', function(error, result) {
+var database = JSON.parse(fs.readFileSync('./database.json', 'utf8').replace(/\/\/[ \S]*/gi,''));
+
+console.log(database);
+
+var twlive = new Firebase(database.host);
+twlive.auth(database.token, function(error, result) {
   if(error) {
     console.log("Login Failed!", error);
   } else {
@@ -27,6 +22,7 @@ twlive.auth('oFqJQgFQujCDzQno7a88OsD54tzOEHTIGs9ltlcS', function(error, result) 
 });
 
 var live = [];
+var channel = database.channel;
 
 var running = false;
 fetch = function() {
@@ -119,4 +115,4 @@ fetch = function() {
     });
 }
 
-setInterval('fetch', 5 * 60 * 1000);
+setInterval(fetch, 5 * 60 * 1000);
