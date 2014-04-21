@@ -104,11 +104,15 @@ fetch = function() {
         var count = 0;
         results['youtube'].forEach(function(active){
             active.type = 'youtube';
+            active.status = 'live';
+            active.updated_at = Math.floor(Date.now() / 1000);
             live['y'+active.vid] = active;
             count += 1;
         });
         results['ustream'].forEach(function(active){
             active.type = 'ustream'
+            active.updated_at = Math.floor(Date.now() / 1000);
+            active.status = 'live';
             live['u'+active.vid] = active;
             count += 1;
         });
