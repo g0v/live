@@ -6,7 +6,8 @@ var channel = {
   youtube: [
     'yuting1987',               // 宇庭
     'indietaiwan',              // 大帝音地
-    'UC6BgDThjkr6sEOovgcrvXjQ'  // Pei-Che Chang
+    'UC6BgDThjkr6sEOovgcrvXjQ', // Pei-Che Chang
+    'g0vtw'                     // G0V
   ],
   ustream: [
     '17831478',                 // Appendectomy Project 割闌尾計畫
