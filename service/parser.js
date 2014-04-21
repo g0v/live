@@ -32,12 +32,14 @@ fetch = function() {
     running = true;
     async.parallel({
         'database': function(cb){
-            db = db_firebase.child('live').val();
-            for (key in db)
-            {
-                db[key].status = 'offlive';
-            }
-            cb(null, db || {});
+            db_firebase.child('live').once('value', function(live) {
+                var db = live.val();
+                for (key in db)
+                {
+                    db[key].status = 'offlive';
+                }
+                cb(null, db || {});
+            })
         },
         'youtube': function(cb){
             async.map(channel.youtube, function(cid, cb) {
