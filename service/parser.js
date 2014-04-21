@@ -11,8 +11,8 @@ var database = JSON.parse(fs.readFileSync('./database.json', 'utf8').replace(/\/
 
 console.log(database);
 
-var twlive = new Firebase(database.host);
-twlive.auth(database.token, function(error, result) {
+var db_firebase = new Firebase(database.host);
+db_firebase.auth(database.token, function(error, result) {
   if(error) {
     console.log("Login Failed!", error);
   } else {
@@ -21,7 +21,7 @@ twlive.auth(database.token, function(error, result) {
   }
 });
 
-var live = [];
+var live;
 var channel = database.channel;
 
 var running = false;
@@ -31,6 +31,14 @@ fetch = function() {
     }
     running = true;
     async.parallel({
+        'database': function(cb){
+            db = db_firebase.child('live').val();
+            for (key in db)
+            {
+                db[key].status = 'offlive';
+            }
+            cb(null, db || {});
+        },
         'youtube': function(cb){
             async.map(channel.youtube, function(cid, cb) {
                 http.get('http://gdata.youtube.com/feeds/api/users/' + cid + '/live/events?v=2&status=active&alt=json', function(res) {
@@ -102,22 +110,30 @@ fetch = function() {
         }
     }, function (err, results) {
         var count = 0;
+        var now = Math.floor(Date.now() / 1000);
+        live = results['database'] || {};
         results['youtube'].forEach(function(active){
             active.type = 'youtube';
             active.status = 'live';
-            active.updated_at = Math.floor(Date.now() / 1000);
+            active.updated_at = now;
             live['y'+active.vid] = active;
             count += 1;
         });
         results['ustream'].forEach(function(active){
             active.type = 'ustream'
-            active.updated_at = Math.floor(Date.now() / 1000);
+            active.updated_at = now;
             active.status = 'live';
             live['u'+active.vid] = active;
             count += 1;
         });
+        for (key in live)
+        {
+            if ( (live[key].updated_at + 15 * 60) < now ) {
+                delete live[key];
+            }
+        }
         console.log(new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '') + ' ' + count);
-        twlive.child('live').set(live);
+        db_firebase.child('live').set(live);
         running = false;
     });
 }
