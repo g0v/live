@@ -1,0 +1,19 @@
+<div class="header">
+  <ul class="nav nav-pills pull-right">
+    <li><a ng-href="#addLink">提供網址</a></li>
+    <li class="active"><a ng-href="#manageLinks">網址管理</a></li>
+  </ul>
+  <h3 class="text-muted">直播網址管理</h3>
+</div>
+<h1>直播網址</h1>
+<div class="row">
+  <div id="linksDiv">
+    <div ng-repeat="item in index">
+      <div>{{getLinks(item)}}</div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <p>
+</div>

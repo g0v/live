@@ -1,0 +1,26 @@
+<div class="header">
+  <ul class="nav nav-pills pull-right">
+    <li class="active"><a ng-href="#addLink">提供網址</a></li>
+    <li><a ng-href="#manageLinks">網址管理</a></li>
+  </ul>
+  <h3 class="text-muted">直播網址收集</h3>
+</div>
+<h1>請提供直播網址</h1>
+<div class="row">
+  <label>網址:</label>
+        <input type="text" ng-model="url" class="form-control" ui-event="{ blur : 'CheckDepucate($event)' }">
+        <div>{{linkPrompt}}</div>
+  <label>標題:</label>
+        <input type="text" ng-model="title" class="form-control">
+  <!--
+  <label>緯度:</label>
+        <input type="text" ng-model="lat" class="form-control">
+  <label>經度:</label>
+        <input type="text" ng-model="lng" class="form-control">
+      -->
+  <button class="btn btn-info" ng-click="addLink()">新增</button>
+</div>
+<alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
+<div class="footer">
+  <p>
+</div>
