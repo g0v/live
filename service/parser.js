@@ -101,15 +101,18 @@ fetch = function() {
             });
         }
     }, function (err, results) {
+        var count = 0;
         results['youtube'].forEach(function(active){
             active.type = 'youtube';
             live['y'+active.vid] = active;
+            count += 1;
         });
         results['ustream'].forEach(function(active){
             active.type = 'ustream'
             live['u'+active.vid] = active;
+            count += 1;
         });
-        console.log(new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '') + ' ' + live.length);
+        console.log(new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '') + ' ' + count);
         twlive.child('live').set(live);
         running = false;
     });
