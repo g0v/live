@@ -99,9 +99,11 @@ async.series({
     }
 }, function (err, results) {
     results['youtube'].forEach(function(active){
+        active.type = 'youtube';
         live['y'+active.vid] = active;
     });
     results['ustream'].forEach(function(active){
+        active.type = 'ustream'
         live['u'+active.vid] = active;
     });
     console.log(live);
