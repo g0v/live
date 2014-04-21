@@ -80,8 +80,8 @@ fetch = function() {
                     if (body.results.status == 'live') {
                         live.push({
                             title: body.results.title,
-                            vid: id,
-                            url: 'http://www.ustream.tv/channel/' + id
+                            vid: body.results.id,
+                            url: 'http://www.ustream.tv/channel/' + body.results.id
                         });
                     }
 
