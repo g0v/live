@@ -9,14 +9,15 @@
 </div>
 <div>
   <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
-  <form>
-    <input type="text" class="form-control" ng-model="linkSearch.$" placeholder="請輸入直播網址">
+  <form ng-submit="addLink()">
+    <input type="text" class="form-control" ng-model="linkSearch.$" placeholder="請輸入直播網址" ng-change="updatePrompt()">
   </form>
   <button class="btn btn-info" ng-click="addLink()" ng-hide="filtered.length" ng-disabled="!is_valid_url(linkSearch.$)">新增連結</button>
-  <h4>已收集的連結<h4>
+  <h4 ng-cloak>{{prompt}}，共{{filtered.length}}個<h4>
   <div class="list-group-item" ng-repeat="link in filtered = (links | orderByPriority | filter:linkSearch) | reverse">
       <a href="{{link.url}}" target="_blank">{{link.url}}</a>
   </div>
+
 </div>
 
 <div class="footer">
