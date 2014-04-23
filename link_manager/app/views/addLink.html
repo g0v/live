@@ -1,0 +1,25 @@
+<div class="header">
+  <!--
+  <ul class="nav nav-pills pull-right">
+    <li class="active"><a ng-href="#addLink">提供網址</a></li>
+    <li><a ng-href="#manageLinks">網址管理</a></li>
+  </ul>
+  -->
+  <h3>直播網址收集</h3>
+</div>
+<div>
+  <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
+  <form ng-submit="addLink()">
+    <input type="text" class="form-control" ng-model="linkSearch.$" placeholder="請輸入直播網址" ng-change="updatePrompt()">
+  </form>
+  <button class="btn btn-info" ng-click="addLink()" ng-hide="filtered.length" ng-disabled="!is_valid_url(linkSearch.$)">新增連結</button>
+  <h4 ng-cloak>{{prompt}}，共{{filtered.length}}個<h4>
+  <div class="list-group-item" ng-repeat="link in filtered = (links | orderByPriority | filter:linkSearch) | reverse">
+      <a href="{{link.url}}" target="_blank">{{link.url}}</a>
+  </div>
+
+</div>
+
+<div class="footer">
+  <p>
+</div>
