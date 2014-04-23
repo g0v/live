@@ -17,10 +17,12 @@ angular
         templateUrl: 'views/addLink.html',
         controller: 'AddLinkCtrl'
       })
+      /*
       .when('/manageLinks', {
         templateUrl: 'views/manageLinks.html',
         controller: 'ManageLinksCtrl'
       })
+      */
       .otherwise({
         redirectTo: '/addLink'
       });
