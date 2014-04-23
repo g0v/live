@@ -2,6 +2,7 @@
 
 angular
   .module('liveApp', [
+    'liveApp.filters',
     'ngCookies',
     'ngResource',
     'ngSanitize',
