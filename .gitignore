@@ -1,4 +1,5 @@
 _public
 node_modules
+bower_components
 
 service/database.json

@@ -11,12 +11,22 @@
     "node": "0.10.x",
     "npm": "1.2.x"
   },
-  "scripts": {},
+  "scripts": {
+    "build": "brunch build",
+    "start": "brunch watch --server"
+  },
   "dependencies": {
     "async": "~0.7.0",
     "firebase": "~1.0.11"
   },
   "devDependencies": {
+    "brunch": "~1.7.13",
+    "javascript-brunch": "~1.7.1",
+    "css-brunch": "~1.7.0",
+    "uglify-js-brunch": "~1.7.7",
+    "clean-css-brunch": "~1.7.1",
+    "auto-reload-brunch": "~1.7.3",
+    "bower": "~1.3.2",
     "googleapis": "~0.6.1"
   }
 }

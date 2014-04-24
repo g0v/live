@@ -20,13 +20,17 @@ git clone $REPO --depth 1 -b gh-pages _public
 # Use node utilities "related" to current working directory.
 export PATH="node_modules/.bin:$PATH";
 
+# build/install live
 npm install
+bower install
+brunch build
+
+# build/install link_manager
 pushd link_manager
 npm install
 bower install
 grunt build
 popd #link_manager
-cp *.html _public/
 mkdir -p _public/link_manager
 cp -rp link_manager/dist/* _public/link_manager
 

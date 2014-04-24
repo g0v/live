@@ -29,6 +29,10 @@ help:
 clean:
 	rm -rf $(RUNTIME_DIR);
 
+.PHONY: server
+server:
+	npm start;
+
 .PHONY: deploy
 deploy:
 	./deploy.sh

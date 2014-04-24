@@ -1,0 +1,21 @@
+{
+  "name": "live",
+  "version": "0.0.1",
+  "homepage": "https://github.com/g0v/live",
+  "authors": [
+    "Jeff Hung <jeff.cc.hung@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.0"
+  },
+  "devDependencies": {
+  }
+}
