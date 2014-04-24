@@ -26,7 +26,7 @@ npm install
 bower install
 grunt build
 popd #link_manager
-cp index.html _public/
+cp *.html _public/
 mkdir -p _public/link_manager
 cp -rp link_manager/dist/* _public/link_manager
 
