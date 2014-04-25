@@ -2,9 +2,10 @@ var http = require('http'),
     async = require('async'),
     fs = require('fs');
 var Firebase = require('firebase');
-var mongodb = require('mongodb')
-  , MongoClient = mongodb.MongoClient;
+var mongodb = require('mongodb'),
+    MongoClient = mongodb.MongoClient;
 var time = require('time');
+var exec = require('child_process').exec;
 
 if ( !fs.existsSync('database.json') ) {
     fs.linkSync('database-sample.json', 'database.json');
@@ -135,22 +136,12 @@ MongoClient.connect(database.channel, function(err, db) {
                 delete live[key];
             }
         }
-        console.log(now.toISOString().replace(/T/, ' ').replace(/\..+/, '') + ' ' + count);
         console.log(live);
         console.log(new_live);
-        // db_firebase.child('live').set(live);
-        running = false;
+        exec('echo ' + now.toISOString().replace(/T/, ' ').replace(/\..+/, '') + ' ' + count + ' >> ~/parser.log');
+        db_firebase.child('live').set(live, function(){
+            process.exit(0);
+        });
     });
   });
 });
-
-// var running = false;
-// fetch = function() {
-//     if (running !== false) {
-//         return ;
-//     }
-//     running = true;
-    
-// }
-
-// setInterval(fetch, 5 * 60 * 1000);
