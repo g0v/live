@@ -115,7 +115,7 @@ MongoClient.connect(database.channel, function(err, db) {
         var live = results['database'] || {};
         var new_live = [];
 
-        results['live'].forEach(function(source){
+        results['live'].forEach(function(source, index){
             source.forEach(function(active){
                 var name = (active.type=='youtube' ? 'y' : 'u')+active.vid;
                 if ( !live[name] ) {
@@ -125,6 +125,7 @@ MongoClient.connect(database.channel, function(err, db) {
                 for (key in active) {
                     live[name][key] = active[key];
                 }
+                live[name]['logo'] = docs[index]['logo'];
                 live[name]['status'] = 'live';
                 live[name].updated_at = updated_at;
                 count += 1;
@@ -145,3 +146,14 @@ MongoClient.connect(database.channel, function(err, db) {
     });
   });
 });
+
+// var running = false;
+// fetch = function() {
+//     if (running !== false) {
+//         return ;
+//     }
+//     running = true;
+    
+// }
+
+// setInterval(fetch, 5 * 60 * 1000);
