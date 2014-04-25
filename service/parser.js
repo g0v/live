@@ -80,80 +80,84 @@ var fetch = {
     }
 }
 
-MongoClient.connect(database.channel, function(err, db) {
+var parser = function (){
+    MongoClient.connect(database.channel, function(err, db) {
 
-  var collection = db.collection('channel')
+      var collection = db.collection('channel')
 
-  collection.find({}).toArray(function(err, docs) {
-    if (err) {
-      return console.error(err)
-    }
-
-    async.parallel({
-        'database': function(cb){
-            db_firebase.child('live').once('value', function(live) {
-                var db = live.val();
-                for (key in db)
-                {
-                    db[key].status = 'offlive';
-                }
-                cb(null, db || {});
-            })
-        },
-        'live': function(cb){
-            async.map(docs, function(item, cb){
-                if ( fetch[item.type] ) {
-                    fetch[item.type](item.id, cb);
-                }
-            }, function (err, results) {
-                cb(null, results);
-            });
+      collection.find({}).toArray(function(err, docs) {
+        if (err) {
+          return console.error(err)
         }
-    }, function (err, results) {
-        var count = 0;
-        var updated_at = Math.floor(Date.now() / 1000);
-        var live = results['database'] || {};
-        var new_live = [];
 
-        results['live'].forEach(function(source, index){
-            source.forEach(function(active){
-                var name = (active.type=='youtube' ? 'y' : 'u')+active.vid;
-                if ( !live[name] ) {
-                    live[name] = {};
-                    new_live.push(active);
-                }
-                for (key in active) {
-                    live[name][key] = active[key];
-                }
-                live[name]['logo'] = docs[index]['logo'];
-                live[name]['status'] = 'live';
-                live[name].updated_at = updated_at;
-                count += 1;
-            });
-        });
-        for (key in live)
-        {
-            if ( (live[key].updated_at + 15 * 60) < updated_at ) {
-                delete live[key];
+        async.parallel({
+            'database': function(cb){
+                db_firebase.child('live').once('value', function(live) {
+                    var db = live.val();
+                    for (key in db)
+                    {
+                        db[key].status = 'offlive';
+                    }
+                    cb(null, db || {});
+                })
+            },
+            'live': function(cb){
+                async.map(docs, function(item, cb){
+                    if ( fetch[item.type] ) {
+                        fetch[item.type](item.id, cb);
+                    }
+                }, function (err, results) {
+                    cb(null, results);
+                });
             }
-        }
-        console.log(live);
-        console.log(new_live);
-        exec('echo ' + now.toISOString().replace(/T/, ' ').replace(/\..+/, '') + ' ' + count + ' >> ~/parser.log');
-        db_firebase.child('live').set(live, function(){
-            process.exit(0);
+        }, function (err, results) {
+            var count = 0;
+            var updated_at = Math.floor(Date.now() / 1000);
+            var live = results['database'] || {};
+            var new_live = [];
+
+            results['live'].forEach(function(source, index){
+                source.forEach(function(active){
+                    var name = (active.type=='youtube' ? 'y' : 'u')+active.vid;
+                    if ( !live[name] ) {
+                        live[name] = {};
+                        new_live.push(active);
+                    }
+                    for (key in active) {
+                        live[name][key] = active[key];
+                    }
+                    live[name]['logo'] = docs[index]['logo'];
+                    live[name]['status'] = 'live';
+                    live[name].updated_at = updated_at;
+                    count += 1;
+                });
+            });
+            for (key in live)
+            {
+                if ( (live[key].updated_at + 15 * 60) < updated_at ) {
+                    delete live[key];
+                }
+            }
+            console.log(live);
+            console.log(new_live);
+            exec('echo ' + now.toISOString().replace(/T/, ' ').replace(/\..+/, '') + ' ' + count + ' >> ~/parser.log');
+            db_firebase.child('live').set(live, function(){
+                process.exit(0);
+            });
         });
+      });
     });
-  });
-});
+}
 
-// var running = false;
-// fetch = function() {
-//     if (running !== false) {
-//         return ;
-//     }
-//     running = true;
-    
-// }
+var running = false;
+run = function() {
+    if (running !== false) {
+        return ;
+    }
+    parser();
+    running = true;
+}
 
-// setInterval(fetch, 5 * 60 * 1000);
+parser();
+
+setInterval(run, 5 * 60 * 1000);
