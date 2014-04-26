@@ -1,19 +1,7 @@
-var googleapis = require('googleapis'),
-    OAuth2Client = googleapis.OAuth2Client;
-
-var API_KEY = 'AIzaSyBzQOyq8uKZKMTRfEPP-Qbrmy98CopcZRY';
-
-var printResult = function(err, result) {
-  if (err) {
-    console.log('Error occurred: ', err);
-  } else {
-    console.log('Result: ', result);
-  }
-};
+var gcal = require('google-calendar');
+var google_calendar = new gcal.GoogleCalendar('AIzaSyBzQOyq8uKZKMTRfEPP-Qbrmy98CopcZRY');
 
 
-googleapis
-  .discover('calendar', 'v1')
-  .execute(function(err, client) {
-    console.log(client);
+google_calendar.calendarList.list(function(err, calendarList) {
+  console.log(err, calendarList);
 });

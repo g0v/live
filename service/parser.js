@@ -81,6 +81,7 @@ var fetch = {
 }
 
 var parser = function (cb){
+    console.log(new time.Date().setTimezone('Asia/Taipei').toLocaleTimeString(), 'start');
     now = new time.Date().setTimezone('Asia/Taipei');
 
     MongoClient.connect(database.channel, function(err, db) {
@@ -149,13 +150,14 @@ var parser = function (cb){
 
 var running = false;
 var run = function() {
-    console.log(new time.Date().setTimezone('Asia/Taipei').toLocaleTimeString());
+    console.log(new time.Date().setTimezone('Asia/Taipei').toLocaleTimeString(), 'init');
     running = true;
 
     if (running !== false) {
         return ;
     }
     parser(function () {
+        console.log(new time.Date().setTimezone('Asia/Taipei').toLocaleTimeString(), 'end');
         running = false;
     });
 }
