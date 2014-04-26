@@ -150,12 +150,13 @@ var parser = function (cb){
 var running = false;
 var run = function() {
     console.log(new time.Date().setTimezone('Asia/Taipei').toLocaleTimeString());
+    running = true;
 
     if (running !== false) {
         return ;
     }
     parser(function () {
-        running = true;
+        running = false;
     });
 }
 
