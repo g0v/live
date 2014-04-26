@@ -80,7 +80,7 @@ var fetch = {
     }
 }
 
-var parser = function (){
+var parser = function (cb){
     MongoClient.connect(database.channel, function(err, db) {
 
       var collection = db.collection('channel')
@@ -141,9 +141,7 @@ var parser = function (){
             console.log(live);
             console.log(new_live);
             exec('echo ' + now.toISOString().replace(/T/, ' ').replace(/\..+/, '') + ' ' + count + ' >> ~/parser.log');
-            db_firebase.child('live').set(live, function(){
-                process.exit(0);
-            });
+            db_firebase.child('live').set(live, cb);
         });
       });
     });
@@ -154,8 +152,9 @@ run = function() {
     if (running !== false) {
         return ;
     }
-    parser();
-    running = true;
+    parser(function () {
+        running = true;
+    });
 }
 
 parser();
