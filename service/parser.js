@@ -140,7 +140,7 @@ var parser = function (cb){
             }
             console.log(live);
             console.log(new_live);
-            exec('echo ' + now.toISOString().replace(/T/, ' ').replace(/\..+/, '') + ' ' + count + ' >> ~/parser.log');
+            exec('echo ' + now.toLocaleDateString() + ' ' + now.toLocaleTimeString() + ' ' + count + ' >> ~/parser.log');
             db_firebase.child('live').set(live, cb);
         });
       });
