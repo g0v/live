@@ -29,6 +29,13 @@ help:
 clean:
 	rm -rf $(RUNTIME_DIR);
 
+.PHONY: build
+build:
+	rm -rf _public;
+	npm install
+	bower install
+	brunch build
+
 .PHONY: server
 server:
 	npm start;
