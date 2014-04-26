@@ -148,8 +148,8 @@ var parser = function (cb){
 }
 
 var running = false;
-run = function() {
-    new time.Date().setTimezone('Asia/Taipei').toLocaleTimeString();
+var run = function() {
+    console.log(new time.Date().setTimezone('Asia/Taipei').toLocaleTimeString());
 
     if (running !== false) {
         return ;
