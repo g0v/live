@@ -151,11 +151,13 @@ var parser = function (cb){
 var running = false;
 var run = function() {
     console.log(new time.Date().setTimezone('Asia/Taipei').toLocaleTimeString(), 'init');
-    running = true;
 
     if (running !== false) {
         return ;
     }
+
+    running = true;
+
     parser(function () {
         console.log(new time.Date().setTimezone('Asia/Taipei').toLocaleTimeString(), 'end');
         running = false;
