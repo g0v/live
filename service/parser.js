@@ -12,7 +12,7 @@ if ( !fs.existsSync('database.json') ) {
 }
 
 var database = JSON.parse(fs.readFileSync('./database.json', 'utf8').replace(/\/\/[ \S]*/gi,''));
-var now = new time.Date().setTimezone('Asia/Taipei');
+var now;
 
 console.log(database);
 
@@ -81,6 +81,8 @@ var fetch = {
 }
 
 var parser = function (cb){
+    now = new time.Date().setTimezone('Asia/Taipei');
+
     MongoClient.connect(database.channel, function(err, db) {
 
       var collection = db.collection('channel')
@@ -138,8 +140,6 @@ var parser = function (cb){
                     delete live[key];
                 }
             }
-            console.log(live);
-            console.log(new_live);
             exec('echo ' + now.toLocaleDateString() + ' ' + now.toLocaleTimeString() + ' ' + count + ' >> ~/parser.log');
             db_firebase.child('live').set(live, cb);
         });
@@ -149,6 +149,8 @@ var parser = function (cb){
 
 var running = false;
 run = function() {
+    new time.Date().setTimezone('Asia/Taipei').toLocaleTimeString();
+
     if (running !== false) {
         return ;
     }
