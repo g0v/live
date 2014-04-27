@@ -47,7 +47,7 @@ var parser = function (cb){
           'title': item.summary,
           'location': item.location,
           'link': item.htmlLink
-        });
+        };
       });
       // events.sort(function(x,y){
       //   return new Date(x.start).getTime() > new Date(y.start).getTime();
