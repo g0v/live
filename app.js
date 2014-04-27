@@ -12,7 +12,7 @@ $(document).ready(function() {
 
   // Load Google Analytics dynamically.
   // TODO: Use jsenv instead.
-  console.log('GA:TrackingID = ' + APP_CONFIG.GOOGLE_ANALYTICS.TRACKING_ID);
+  console.log('[status_bar] GA:TrackingID = ' + APP_CONFIG.GOOGLE_ANALYTICS.TRACKING_ID);
   ga('create', APP_CONFIG.GOOGLE_ANALYTICS.TRACKING_ID, { 'cookieDomain': 'none' });
   ga('send', 'pageview');
 
@@ -39,12 +39,12 @@ $(document).ready(function() {
   // Get video URL
   var pos = document.location.href.indexOf('?');
   var url = (pos < 0) ? '-' : decodeURIComponent(document.location.href.slice(pos + 1));
-//console.log('url=' + url);
+  console.log('[status_bar] url=' + url);
 
   $('.report-status').click(function(event) {
     var status = $(this).data('videoStatus');
     if (status) {
-      console.log('report video status as "' + status + '" for ' + url);
+      console.log('[status_bar] report video status as "' + status + '" for ' + url);
       ga_push('VideoStatus', 'report-' + status, url);
     }
   });
