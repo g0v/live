@@ -26,7 +26,7 @@ db_firebase.auth(database.token, function(error, result) {
   }
 });
 
-var events = [];
+var events = {};
 
 var parser = function (cb){
   now = new time.Date().setTimezone('Asia/Taipei');
@@ -38,8 +38,9 @@ var parser = function (cb){
     });
     res.on('end', function() {
       var list = JSON.parse(body).items;
+      var events = {};
       list.forEach(function(item){
-        events.push({
+        events[item.id] = {
           'day': item.start.dateTime ? false : true,
           'start': item.start.dateTime || item.start.date + 'T00:00:00+08:00',
           'end': item.end.dateTime || item.end.date + 'T00:00:00+08:00',
@@ -48,9 +49,9 @@ var parser = function (cb){
           'link': item.htmlLink
         });
       });
-      events.sort(function(x,y){
-        return new Date(x.start).getTime() > new Date(y.start).getTime();
-      });
+      // events.sort(function(x,y){
+      //   return new Date(x.start).getTime() > new Date(y.start).getTime();
+      // });
       db_firebase.child('event').set(events, cb);
     });
   }).on('error', function(e) {
