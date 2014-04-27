@@ -51,11 +51,10 @@ var parser = function (cb){
       events.sort(function(x,y){
         return new Date(x.start).getTime() > new Date(y.start).getTime();
       });
-      console.log(events);
-      db_firebase.child('event').set(events);
+      db_firebase.child('event').set(events, cb);
     });
   }).on('error', function(e) {
-      console.log(null, []);
+      console.log(null, cb);
   });
 };
 
