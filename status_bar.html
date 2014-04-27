@@ -10,8 +10,9 @@
     <meta name="description" content="Live broadcasting aggregator via hackfoldr">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="app.css" rel="stylesheet">
   </head>
-  <body>
+  <body class="status-bar">
       <div class="btn-group" style="float: left; margin-right: 6px;">
         <button type="button" class="btn btn-success report-status" data-video-status="normal">
           <span class="glyphicon glyphicon-hand-right"></span> 回報已正常
@@ -26,7 +27,7 @@
         <button type="button" class="btn btn-warning report-status" data-video-status="mute">無聲音</button>
         <button type="button" class="btn btn-danger  report-status" data-video-status="black">無畫面</button>
       </div>
-      <div class="btn-group" style="float: left;">
+      <div class="btn-group hidden" style="float: left;">
         <button type="button" class="btn btn-default">
           <span class="glyphicon glyphicon-thumbs-up"></span> 99
         </button>
@@ -34,7 +35,7 @@
           <span class="glyphicon glyphicon-share"></span> 分享
         </button>
       </div>
-      <div class="btn-group" style="float: right">
+      <div class="btn-group hidden" style="float: right">
         <button type="button" class="btn btn-default">
           <span class="glyphicon glyphicon-check"></span> 訂閱
         </button>
