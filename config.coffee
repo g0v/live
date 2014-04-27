@@ -18,4 +18,6 @@ exports.config =
     stylesheets:
       joinTo:
         'app.css': /^app\/styles/
+  server:
+    port: 3334
 
