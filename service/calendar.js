@@ -38,6 +38,7 @@ var parser = function (cb){
     });
     res.on('end', function() {
       var list = JSON.parse(body).items;
+      var temp = [];
       list.forEach(function(item){
         events.push({
           'day': item.start.dateTime ? false : true,
@@ -51,7 +52,10 @@ var parser = function (cb){
       events.sort(function(x,y){
         return new Date(x.start).getTime() < new Date(x.end).getTime();
       });
-      db_firebase.child('event').set(events);
+      events.forEach(function(item){
+        temp.push(item);
+      });
+      db_firebase.child('event').set(temp);
     });
   }).on('error', function(e) {
       console.log(null, []);
