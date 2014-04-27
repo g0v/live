@@ -1,11 +1,13 @@
 var http = require('http'),
     async = require('async'),
-    fs = require('fs');
+    fs = require('fs'),
+    exec = require('child_process').exec;
+
 var Firebase = require('firebase');
 var mongodb = require('mongodb'),
     MongoClient = mongodb.MongoClient;
+
 var time = require('time');
-var exec = require('child_process').exec;
 
 if ( !fs.existsSync('database.json') ) {
     fs.linkSync('database-sample.json', 'database.json');
@@ -81,7 +83,6 @@ var fetch = {
 }
 
 var parser = function (cb){
-    console.log(new time.Date().setTimezone('Asia/Taipei').toLocaleTimeString(), 'start');
     now = new time.Date().setTimezone('Asia/Taipei');
 
     MongoClient.connect(database.channel, function(err, db) {
@@ -150,14 +151,13 @@ var parser = function (cb){
 
 var running = false;
 var run = function() {
-    console.log(new time.Date().setTimezone('Asia/Taipei').toLocaleTimeString(), 'init');
-
     if (running !== false) {
         return ;
     }
 
     running = true;
 
+    console.log(new time.Date().setTimezone('Asia/Taipei').toLocaleTimeString(), 'start');
     parser(function () {
         console.log(new time.Date().setTimezone('Asia/Taipei').toLocaleTimeString(), 'end');
         running = false;
