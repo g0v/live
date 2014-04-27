@@ -30,8 +30,9 @@ var events = {};
 
 var parser = function (cb){
   now = new time.Date().setTimezone('Asia/Taipei');
+  var date = new Date().toISOString().replace(/T.*/gi, '');
 
-  https.get('https://www.googleapis.com/calendar/v3/calendars/9dvlo755f8c5lbcs9eu9hfd1g0%40group.calendar.google.com/events?key=AIzaSyBqSFbeQLYKQl80FblMuj682zvpbpPVG_o&timeZone=Asia/Taipei&timeMin=2014-04-26T00:00:00.000Z', function(res) {
+  https.get('https://www.googleapis.com/calendar/v3/calendars/9dvlo755f8c5lbcs9eu9hfd1g0%40group.calendar.google.com/events?key=AIzaSyBqSFbeQLYKQl80FblMuj682zvpbpPVG_o&timeZone=Asia/Taipei&timeMin=' + date + 'T00:00:00.000Z', function(res) {
     var body = '';
     res.on('data', function(chunk) {
       body += chunk;
