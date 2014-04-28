@@ -38,6 +38,13 @@ $(document).ready(function() {
     if (status) {
       console.log('[status_bar] report video status as "' + status + '" for ' + url);
       ga_push('VideoStatus', 'report-' + status, url);
+
+      console.log('[status_bar] disable all reporting buttons');
+      $('.report-status').attr('disabled', 'disabled');
+      setTimeout(function() {
+        $('.report-status').removeAttr('disabled');
+        console.log('[status_bar] enable all reporting buttons');
+      }, APP_CONFIG.DISABLE_REPORTING_TIME);
     }
   });
 });

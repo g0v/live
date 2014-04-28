@@ -1,5 +1,6 @@
 var APP_CONFIG = window.APP_CONFIG = {
   "BUILD": "git-unknown",
+  "DISABLE_REPORTING_TIME": 300000,
   "GOOGLE_ANALYTICS": {
     "TRACKING_ID": 'UA-50192245-1'
   }
