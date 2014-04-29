@@ -1,3 +1,7 @@
-body.status-bar {
+body {
 	background-color: black;
+}
+
+#social-likes {
+	margin-top: 0px;
 }
