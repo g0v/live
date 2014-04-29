@@ -173,7 +173,6 @@ var parser = function (cb){
                     delete live[key];
                 }
             }
-            console.log(live);
             db_firebase.child('live').set(live, cb);
         });
       });
