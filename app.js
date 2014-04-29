@@ -1,6 +1,7 @@
 var APP_CONFIG = window.APP_CONFIG = {
   "BUILD": "git-unknown",
   "DISABLE_REPORTING_TIME": 300000,
+  "SOCIAL_REFRESH_TIME":    300000,
   "GOOGLE_ANALYTICS": {
     "TRACKING_ID": 'UA-50192245-1'
   }
@@ -41,6 +42,14 @@ $(document).ready(function() {
   var pos = document.location.href.indexOf('?');
   var url = (pos < 0) ? '-' : decodeURIComponent(document.location.href.slice(pos + 1));
   console.log('[status_bar] url=' + url);
+
+  // https://github.com/sapegin/social-likes
+  var update_social_likes = function() {
+    $('#social-likes').socialLikes({ counters: true, forceUpdate: true, url: url, title: '<title>' });
+    console.log('updated social-likes');
+    setTimeout(update_social_likes, APP_CONFIG.SOCIAL_REFRESH_TIME);
+  };
+  update_social_likes();
 
   $('.report-status').click(function(event) {
     var status = $(this).data('videoStatus');

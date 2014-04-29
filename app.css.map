@@ -1,1 +1,1 @@
-{"version":3,"file":"_public/app.css","sources":["app/styles/status_bar.css"],"names":[],"mappings":"AAAA;AACA;AACA;AACA","sourcesContent":["body.status-bar {\n\tbackground-color: black;\n}\n"]}
+{"version":3,"file":"_public/app.css","sources":["app/styles/status_bar.css"],"names":[],"mappings":"AAAA;AACA;AACA;AACA;AACA;AACA;AACA;AACA","sourcesContent":["body {\n\tbackground-color: black;\n}\n\n#social-likes {\n\tmargin-top: 0px;\n}\n"]}
