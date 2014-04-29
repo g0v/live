@@ -32,14 +32,27 @@ var parser = function (cb){
   now = new time.Date().setTimezone('Asia/Taipei');
   var date = new Date().toISOString().replace(/T.*/gi, '');
 
-  https.get('https://www.googleapis.com/calendar/v3/calendars/9dvlo755f8c5lbcs9eu9hfd1g0%40group.calendar.google.com/events?key=AIzaSyBqSFbeQLYKQl80FblMuj682zvpbpPVG_o&timeZone=Asia/Taipei&timeMin=' + date + 'T00:00:00.000Z', function(res) {
-    var body = '';
-    res.on('data', function(chunk) {
-      body += chunk;
+  var source = [
+    'https://www.googleapis.com/calendar/v3/calendars/9dvlo755f8c5lbcs9eu9hfd1g0%40group.calendar.google.com/events?key=AIzaSyBqSFbeQLYKQl80FblMuj682zvpbpPVG_o&timeZone=Asia/Taipei&timeMin=' + date + 'T00:00:00.000Z',
+    'https://www.googleapis.com/calendar/v3/calendars/s6jage479tquhj3mr7abhecs48%40group.calendar.google.com/events?key=AIzaSyBqSFbeQLYKQl80FblMuj682zvpbpPVG_o&timeZone=Asia/Taipei&timeMin=' + date + 'T00:00:00.000Z'
+  ];
+
+  async.map(source, function(url, cb){
+    https.get(url, function(res) {
+      var body = '';
+      res.on('data', function(chunk) {
+        body += chunk;
+      });
+      res.on('end', function() {
+        var list = JSON.parse(body).items || [];
+        cb(null, list);
+      });
+    }).on('error', function(e) {
+      cb(null, []);
     });
-    res.on('end', function() {
-      var list = JSON.parse(body).items;
-      var events = {};
+  }, function(err, results){
+    var events = {};
+    results.forEach(function(list){
       list.forEach(function(item){
         events[item.id] = {
           'day': item.start.dateTime ? false : true,
@@ -50,13 +63,8 @@ var parser = function (cb){
           'link': item.htmlLink
         };
       });
-      // events.sort(function(x,y){
-      //   return new Date(x.start).getTime() > new Date(y.start).getTime();
-      // });
-      db_firebase.child('event').set(events, cb);
     });
-  }).on('error', function(e) {
-      console.log(null, cb);
+    db_firebase.child('event').set(events, cb);
   });
 };
 
@@ -77,4 +85,4 @@ var run = function() {
 
 parser();
 
-setInterval(run, 5 * 60 * 1000);
+setInterval(run, 20 * 60 * 1000);

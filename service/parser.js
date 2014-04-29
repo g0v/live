@@ -80,6 +80,7 @@ var fetch = {
             cb(null, []);
         });
     }
+    // http://api.ustream.tv/json?subject=user&uid=sleep2002&command=listAllChannels
 }
 
 var parser = function (cb){
