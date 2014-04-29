@@ -1,12 +1,5 @@
 {
   "host": "twlive.firebaseio.com",
   "token": "QLT9CbSMICmghZqlJhZFth0cU5AyrtBdVUk7Ee0a",
-  "channel": {
-    "youtube": [
-      "UC_Yu3Xmw23A0wcjc6Tl3b-Q"  // Live Test
-    ],
-    "ustream": [
-      "17854024"                  // Live Test
-    ]
-  }
+  "channel": "mongodb:\/\/live:livetw2014ngo@oceanic.mongohq.com:10000\/live"
 }
