@@ -1,8 +1,7 @@
 var http = require('http'),
     async = require('async'),
     fs = require('fs'),
-    exec = require('child_process'),
-    process = require('process');
+    exec = require('child_process');
 
 var Firebase = require('firebase');
 var mongodb = require('mongodb'),

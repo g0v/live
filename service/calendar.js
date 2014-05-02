@@ -1,8 +1,7 @@
 var https = require('https'),
     async = require('async'),
     fs = require('fs'),
-    exec = require('child_process').exec,
-    process = require('process');
+    exec = require('child_process').exec;
 
 var Firebase = require('firebase');
 var mongodb = require('mongodb'),
