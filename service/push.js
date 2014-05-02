@@ -16,9 +16,13 @@ var get_token = querystring.stringify({
 });
 
 var message = JSON.stringify({
-  'channelId': '05561045968221820805/gadhklbfdcmjhdbcegcoaccaimmoodkm',
+  'channelId': ['02675414367655541578/fhcffinobmpdchcoapdeoinhdmlihiok','05561045968221820805/fhcffinobmpdchcoapdeoinhdmlihiok'],
   'subchannelId': '0',
-  'payload': 'Thanks for installing my app!'
+  'payload': new Buffer(JSON.stringify({
+    'type': 'live',
+    'url': 'url',
+    'title': '我愛台灣'
+  })).toString('base64')
 });
 
 var req = https.request({
@@ -77,3 +81,5 @@ req.on('error', function(e) {
 
 req.write(get_token);
 req.end();
+
+// JSON.parse(decodeURIComponent(escape(atob('eyJ0eXBlIjoibGl2ZSIsInVybCI6InVybCIsInRpdGxlIjoi5oiR5oSb5Y+w54GjIn0='))))

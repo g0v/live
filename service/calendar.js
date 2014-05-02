@@ -1,7 +1,8 @@
 var https = require('https'),
     async = require('async'),
     fs = require('fs'),
-    exec = require('child_process').exec;
+    exec = require('child_process').exec,
+    process = require('process');
 
 var Firebase = require('firebase');
 var mongodb = require('mongodb'),
@@ -68,10 +69,16 @@ var parser = function (cb){
   });
 };
 
+var limit = 100;
 var running = false;
 var run = function() {
     if (running !== false) {
         return ;
+    }
+
+    limit -= 1;
+    if ( limit < 1 ) {
+      process.exit(0);
     }
 
     running = true;
@@ -82,6 +89,8 @@ var run = function() {
         running = false;
     });
 }
+
+console.log(new time.Date().setTimezone('Asia/Taipei').toLocaleTimeString(), 'Calendar Init!');
 
 parser();
 
