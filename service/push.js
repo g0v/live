@@ -27,7 +27,7 @@ var req = https.request({
   method: 'POST',
   headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
-      'Content-Length': message.length
+      'Content-Length': get_token.length
   }
 }, function(res){
   var body = '';
@@ -55,6 +55,7 @@ var req = https.request({
           body += chunk;
         });
         res.on('end', function() {
+          console.log('Send Completed!');
           console.log(body);
         });
       });
@@ -64,6 +65,8 @@ var req = https.request({
 
       send.write(message);
       send.end();
+    }else{
+      console.log('Get Token Failed!');
     }
   });
 });
