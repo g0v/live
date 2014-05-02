@@ -16,7 +16,9 @@
     "async": "~0.7.0",
     "firebase": "~1.0.11",
     "mongodb": "~1.4.2",
-    "time": "~0.10.0"
+    "time": "~0.10.0",
+    "node-gcm": "~0.9.11",
+    "googleapis": "~0.7.0"
   },
   "devDependencies": {
     "googleapis": "~0.6.1"
