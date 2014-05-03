@@ -4,8 +4,6 @@ var https = require('https'),
     exec = require('child_process').exec;
 
 var Firebase = require('firebase');
-var mongodb = require('mongodb'),
-    MongoClient = mongodb.MongoClient;
 
 var time = require('time');
 

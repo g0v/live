@@ -16,8 +16,6 @@ if ( !fs.existsSync('database.json') ) {
 var database = JSON.parse(fs.readFileSync('./database.json', 'utf8').replace(/\/\/[ \S]*/gi,''));
 var now;
 
-console.log(database);
-
 var db_firebase = new Firebase(database.host);
 db_firebase.auth(database.token, function(error, result) {
   if(error) {
