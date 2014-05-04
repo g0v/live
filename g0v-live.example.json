@@ -1,0 +1,60 @@
+{
+  "index": { "version": 1 },
+  "live":
+  {
+    "videos":
+	{
+      "video_c1f8cd3303a4dfa1c21fe3f8b6e36760":
+      {
+        "title": "公民記者雨停",
+        "url": "http://www.ustream.tv/embed/17890296",
+        "started_at": "20140501T191100Z",
+        "fetched_status":
+        {
+          "20140504T004800Z":
+          {
+            "report_normal": 213,
+            "report_delay": 213,
+            "report_blur": 213,
+            "report_mute": 213,
+            "report_black": 213
+          },
+          "20140504T011100Z":
+          {
+            "report_normal": 500,
+            "report_delay": 213,
+            "report_blur": 213,
+            "report_mute": 213,
+            "report_black": 213
+          }
+        }
+      },
+      "video_c3e0a281953ed8f0e5ec9500e9e1b715":
+      {
+        "title": "LIVE! 佔領中山南直播! 4/27 全民展現廢核決心 - YouTube",
+        "url": "https://www.youtube.com/embed/_xN8Rg4_xas",
+        "started_at": "20140501T191100Z",
+        "fetched_status":
+        {
+          "20140504T004800Z":
+          {
+            "report_normal": 213,
+            "report_delay": 213,
+            "report_blur": 213,
+            "report_mute": 213,
+            "report_black": 213
+          },
+          "20140504T011100Z":
+          {
+            "report_normal": 500,
+            "report_delay": 213,
+            "report_blur": 213,
+            "report_mute": 213,
+            "report_black": 213
+          }
+        }
+      }
+    }
+  }
+}
+
