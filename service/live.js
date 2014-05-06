@@ -42,7 +42,7 @@ var fetch = {
             body = JSON.parse(body);
             if (body.feed.entry) {
                 for (var i = 0, len = body.feed.entry.length; i < len; i++) {
-                    var vid = /videos\/([\w]+)/.exec(body.feed.entry[i].content.src)[1];
+                    var vid = /videos\/([\w-_]+)/.exec(body.feed.entry[i].content.src)[1];
                     active.push({
                         type: 'youtube',
                         title: body.feed.entry[i].title.$t,
