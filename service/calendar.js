@@ -13,7 +13,6 @@ if ( !fs.existsSync('database.json') ) {
 }
 
 var cfg = require('./database.json');
-var now;
 
 Parse.initialize(cfg.live.appid, cfg.live.key, cfg.live.master);
 Parse.Cloud.useMasterKey();
@@ -33,7 +32,7 @@ liveDB.auth(cfg.release.token, function(error, result) {
 });
 
 var parser = function (cb){
-  now = new time.Date().setTimezone('Asia/Taipei');
+  var now = new time.Date().setTimezone('Asia/Taipei');
   var date = new Date().toISOString().replace(/T.*/gi, '');
 
   var source = [
@@ -61,21 +60,16 @@ var parser = function (cb){
       'facebook': function(cb){
         query.find({
           success: function(results) {
-            results.forEach(function(item){
+            var data = [];
+            async.each(results, function(item, cb){
               graph.get(item.attributes.eid, function(err, res) {
-                console.log({
-                  type: 'facebook',
-                  eid: res.id,
-                  title: res.name,
-                  description: res.description,
-                  start: res.start_time,
-                  end: res.end_time,
-                  owner: res.owner.name,
-                  location: res.location,
-                  day: res.is_date_only,
-                  link: 'https://www.facebook.com/events/' + res.id + '/'
-                });
+                if (new Date(res.start_time).getTime() > new Date().getTime() + ( 16 * 60 * 60 * 1000 )) {
+                  data.push(res);
+                }
+                cb(null);
               });
+            }, function () {
+              cb(null, data);
             });
           },
           error: function(error) {
@@ -88,7 +82,8 @@ var parser = function (cb){
     var events = {};
     results['google'].forEach(function(list){
       list.forEach(function(item){
-        events[item.id] = {
+        events['google_' + item.id] = {
+          'type': 'google',
           'day': item.start.dateTime ? false : true,
           'start': item.start.dateTime || item.start.date + 'T00:00:00+08:00',
           'end': item.end.dateTime || item.end.date + 'T00:00:00+08:00',
@@ -97,6 +92,17 @@ var parser = function (cb){
           'link': item.htmlLink
         };
       });
+    });
+    results['facebook'].forEach(function(item){
+      events['facebook_' + item.id] = {
+        'type': 'facebook',
+        'day': item.is_date_only,
+        'start': item.is_date_only ? item.start_time + 'T00:00:00+08:00' : item.start_time,
+        'end': item.is_date_only ? item.end_time + 'T00:00:00+08:00' : item.end_time,
+        'title': item.name,
+        'location': item.location,
+        'link': 'https://www.facebook.com/' + item.id + '/'
+      };
     });
     liveDB.child('event').set(events, cb);
   });
