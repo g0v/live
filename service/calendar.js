@@ -2,20 +2,28 @@ var https = require('https'),
     async = require('async'),
     fs = require('fs'),
     exec = require('child_process').exec;
-
-var Firebase = require('firebase');
-
 var time = require('time');
+    
+var Parse = require('parse').Parse;
+var Firebase = require('firebase');
+var graph = require('fbgraph');
 
 if ( !fs.existsSync('database.json') ) {
     fs.linkSync('database-sample.json', 'database.json');
 }
 
-var database = require('./database.json');
+var cfg = require('./database.json');
 var now;
 
-var db_firebase = new Firebase(database.release.host);
-db_firebase.auth(database.release.token, function(error, result) {
+Parse.initialize(cfg.live.appid, cfg.live.key, cfg.live.master);
+Parse.Cloud.useMasterKey();
+var Fbevent = Parse.Object.extend("fbevent");
+var query = new Parse.Query(Fbevent);
+
+graph.setAccessToken(cfg.fbevent.fbtoken);
+
+var liveDB = new Firebase(cfg.release.host);
+liveDB.auth(cfg.release.token, function(error, result) {
   if(error) {
     console.log("Login Failed!", error);
   } else {
@@ -23,8 +31,6 @@ db_firebase.auth(database.release.token, function(error, result) {
     console.log('Auth expires at:', new Date(result.expires * 1000));
   }
 });
-
-var events = {};
 
 var parser = function (cb){
   now = new time.Date().setTimezone('Asia/Taipei');
@@ -35,22 +41,52 @@ var parser = function (cb){
     'https://www.googleapis.com/calendar/v3/calendars/s6jage479tquhj3mr7abhecs48%40group.calendar.google.com/events?key=AIzaSyBqSFbeQLYKQl80FblMuj682zvpbpPVG_o&timeZone=Asia/Taipei&timeMin=' + date + 'T00:00:00.000Z'
   ];
 
-  async.map(source, function(url, cb){
-    https.get(url, function(res) {
-      var body = '';
-      res.on('data', function(chunk) {
-        body += chunk;
-      });
-      res.on('end', function() {
-        var list = JSON.parse(body).items || [];
-        cb(null, list);
-      });
-    }).on('error', function(e) {
-      cb(null, []);
-    });
-  }, function(err, results){
+  async.parallel({
+      'google': function(cb){
+        async.map(source, function (url, cb) {
+          https.get(url, function(res) {
+            var body = '';
+            res.on('data', function(chunk) {
+              body += chunk;
+            });
+            res.on('end', function() {
+              var list = JSON.parse(body).items || [];
+              cb(null, list);
+            });
+          }).on('error', function(e) {
+            cb(null, []);
+          });
+        }, cb);
+      },
+      'facebook': function(cb){
+        query.find({
+          success: function(results) {
+            results.forEach(function(item){
+              graph.get(item.attributes.eid, function(err, res) {
+                console.log({
+                  type: 'facebook',
+                  eid: res.id,
+                  title: res.name,
+                  description: res.description,
+                  start: res.start_time,
+                  end: res.end_time,
+                  owner: res.owner.name,
+                  location: res.location,
+                  day: res.is_date_only,
+                  link: 'https://www.facebook.com/events/' + res.id + '/'
+                });
+              });
+            });
+          },
+          error: function(error) {
+            console.log(error);
+            cb(null, []);
+          }
+        });
+      }
+  }, function (err, results) {
     var events = {};
-    results.forEach(function(list){
+    results['google'].forEach(function(list){
       list.forEach(function(item){
         events[item.id] = {
           'day': item.start.dateTime ? false : true,
@@ -62,7 +98,7 @@ var parser = function (cb){
         };
       });
     });
-    db_firebase.child('event').set(events, cb);
+    liveDB.child('event').set(events, cb);
   });
 };
 

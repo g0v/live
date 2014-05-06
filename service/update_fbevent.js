@@ -4,9 +4,6 @@ var https = require('https'),
 var Parse = require('parse').Parse,
     Token = Parse.Object.extend("token");
 
-var mongodb = require('mongodb'),
-    MongoClient = mongodb.MongoClient;
-
 var graph = require('fbgraph');
 
 if ( !fs.existsSync('database.json') ) {
