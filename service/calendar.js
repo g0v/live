@@ -11,11 +11,11 @@ if ( !fs.existsSync('database.json') ) {
     fs.linkSync('database-sample.json', 'database.json');
 }
 
-var database = JSON.parse(fs.readFileSync('./database.json', 'utf8').replace(/\/\/[ \S]*/gi,''));
+var database = require('./database.json');
 var now;
 
-var db_firebase = new Firebase(database.host);
-db_firebase.auth(database.token, function(error, result) {
+var db_firebase = new Firebase(database.release.host);
+db_firebase.auth(database.release.token, function(error, result) {
   if(error) {
     console.log("Login Failed!", error);
   } else {

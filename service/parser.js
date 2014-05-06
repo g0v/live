@@ -3,21 +3,25 @@ var http = require('http'),
     fs = require('fs'),
     exec = require('child_process');
 
-var Firebase = require('firebase');
-var mongodb = require('mongodb'),
-    MongoClient = mongodb.MongoClient;
-
 var time = require('time');
+
+var Parse = require('parse').Parse;
+var Firebase = require('firebase');
+
 
 if ( !fs.existsSync('database.json') ) {
     fs.linkSync('database-sample.json', 'database.json');
 }
 
-var database = JSON.parse(fs.readFileSync('./database.json', 'utf8').replace(/\/\/[ \S]*/gi,''));
+var cfg = require('./database.json');
 var now;
 
-var db_firebase = new Firebase(database.host);
-db_firebase.auth(database.token, function(error, result) {
+Parse.initialize(cfg.live.appid, cfg.live.key, cfg.live.master);
+Parse.Cloud.useMasterKey();
+var Channel = Parse.Object.extend("channel");
+
+var db_firebase = new Firebase(cfg.release.host);
+db_firebase.auth(cfg.release.token, function(error, result) {
   if(error) {
     console.log("Login Failed!", error);
   } else {
@@ -109,71 +113,69 @@ var fetch = {
     }
 }
 
+
+var query = new Parse.Query(Channel);
 var parser = function (cb){
     now = new time.Date().setTimezone('Asia/Taipei');
 
-    MongoClient.connect(database.channel, function(err, db) {
-
-      var collection = db.collection('channel')
-
-      collection.find({}).toArray(function(err, docs) {
-        if (err) {
-          return console.error(err)
-        }
-
-        async.parallel({
-            'database': function(cb){
-                db_firebase.child('live').once('value', function(live) {
-                    var db = live.val();
-                    for (key in db)
-                    {
-                        db[key].status = 'offlive';
-                    }
-                    cb(null, db || {});
-                })
-            },
-            'live': function(cb){
-                async.map(docs, function(item, cb){
-                    if ( fetch[item.type] ) {
-                        fetch[item.type](item.id, cb);
-                    }else{
-                        cb(null, []);
-                    }
-                }, function (err, results) {
-                    cb(null, results);
-                });
-            }
-        }, function (err, results) {
-            var count = 0;
-            var updated_at = Math.floor(Date.now() / 1000);
-            var live = results['database'] || {};
-            var new_live = [];
-
-            results['live'].forEach(function(source, index){
-                source.forEach(function(active){
-                    var name = (active.type=='youtube' ? 'y' : 'u')+active.vid;
-                    if ( !live[name] ) {
-                        live[name] = {};
-                        new_live.push(active);
-                    }
-                    for (key in active) {
-                        live[name][key] = active[key];
-                    }
-                    live[name]['logo'] = active.thumb || docs[index]['logo'];
-                    live[name]['status'] = 'live';
-                    live[name].updated_at = updated_at;
-                    count += 1;
-                });
-            });
-            for (key in live)
-            {
-                if ( (live[key].updated_at + 15 * 60) < updated_at ) {
-                    delete live[key];
+    query.find({
+        success: function(channel) {
+            async.parallel({
+                'database': function(cb){
+                    db_firebase.child('live').once('value', function(live) {
+                        var db = live.val();
+                        for (key in db)
+                        {
+                            db[key].status = 'offlive';
+                        }
+                        cb(null, db || {});
+                    })
+                },
+                'live': function(cb){
+                    async.map(channel, function(item, cb){
+                        if ( fetch[item.type] ) {
+                            fetch[item.type](item.uid, cb);
+                        }else{
+                            cb(null, []);
+                        }
+                    }, function (err, results) {
+                        cb(null, results);
+                    });
                 }
-            }
-            db_firebase.child('live').set(live, cb);
-        });
-      });
+            }, function (err, results) {
+                var count = 0;
+                var updated_at = Math.floor(Date.now() / 1000);
+                var live = results['database'] || {};
+                var new_live = [];
+
+                results['live'].forEach(function(source, index){
+                    source.forEach(function(active){
+                        var name = (active.type=='youtube' ? 'y' : 'u')+active.vid;
+                        if ( !live[name] ) {
+                            live[name] = {};
+                            new_live.push(active);
+                        }
+                        for (key in active) {
+                            live[name][key] = active[key];
+                        }
+                        live[name]['logo'] = active.thumb || docs[index]['logo'];
+                        live[name]['status'] = 'live';
+                        live[name].updated_at = updated_at;
+                        count += 1;
+                    });
+                });
+                for (key in live)
+                {
+                    if ( (live[key].updated_at + 15 * 60) < updated_at ) {
+                        delete live[key];
+                    }
+                }
+                db_firebase.child('live').set(live, cb);
+            });
+        },
+        error: function(error) {
+            console.log("Fetch Channel Error: " + error.code + " " + error.message);
+        }
     });
 }
 

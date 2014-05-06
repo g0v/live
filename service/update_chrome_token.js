@@ -1,55 +1,77 @@
 var https = require('https'),
     fs = require('fs'),
-    querystring = require('querystring');
+    async = require('async');
 
 var Parse = require('parse').Parse;
-var Token = Parse.Object.extend("token");
-
-var mongodb = require('mongodb'),
-    MongoClient = mongodb.MongoClient;
 
 if ( !fs.existsSync('database.json') ) {
     fs.linkSync('database-sample.json', 'database.json');
 }
 
-var cfg = JSON.parse(fs.readFileSync('./database.json', 'utf8').replace(/\/\/[ \S]*/gi,''));
+var cfg = require('./database.json');
+
 
 Parse.initialize(cfg.chrome.appid, cfg.chrome.key, cfg.chrome.master);
 Parse.Cloud.useMasterKey();
 
-var tokens = {};
+Token = Parse.Object.extend("token");
+Chrome_Token = Parse.Object.extend("chrome_token");
+
+var token = [];
+var timestamp = {};
 var query = new Parse.Query(Token);
+var upset = new Parse.Query(Chrome_Token);
 query.find({
   success: function(results) {
-    tokens = {};
+    token = [];
+    timestamp = {};
     results.forEach(function(item){
       if ( /[0-9]+\/[\w]+/i.exec(item.attributes.token) ) {
-        var timestamp = new Date(item.createdAt).getTime();
-        if ((tokens[item.attributes.token] || 0) < timestamp) {
-          tokens[item.attributes.token] = timestamp;  
+        var updateAt = new Date(item.createdAt).getTime();
+        if ((timestamp[item.attributes.token] || 0) < updateAt) {
+          timestamp[item.attributes.token] = updateAt;  
+        }
+        if (token.indexOf(item.attributes.token) < 0) {
+          token.push(item.attributes.token);
         }
       }
     });
-    MongoClient.connect(cfg.chrome.mongo, function(err, db) {
-        if (err) console.log(err);
-        var count = 0;
-        var collection = db.collection('chrome_token');
-        for ( token in tokens ) {
-          collection.update({
-            "token": token
-          }, {
-            "token": token,
-            "updatedAt": tokens[token]
-          }, {
-            upsert: true
-          }, function(err) {
-            if (err) {
-              console.log('update token error', err);
-            }
-          });
-          count += 1;
+    Parse.initialize(cfg.live.appid, cfg.live.key, cfg.live.master);
+    Parse.Cloud.useMasterKey();
+    async.each(token, function (item, cb) {
+      upset.equalTo("token", item);
+      upset.first({
+        success: function(chrome_token) {
+          if ( chrome_token ) {
+            chrome_token.save({
+              "responseAt": timestamp[item]
+            },{
+              success: function(chrome_token) {
+                console.log('success update', item);
+              },
+              error: function(chrome_token, error) {
+                console.log('failed update', item);
+              }
+            });
+          }else{
+            chrome_token = new Chrome_Token();
+            chrome_token.save({
+              "token": item,
+              "responseAt": timestamp[item]
+            },{
+              success: function(chrome_token) {
+                console.log('success create', item);
+              },
+              error: function(chrome_token, error) {
+                console.log('failed create', item);
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('failed', item);
         }
-        console.log('update completed!', count);
+      });
     });
   },
   error: function(error) {
