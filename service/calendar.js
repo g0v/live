@@ -85,8 +85,8 @@ var parser = function (cb){
         events['google_' + item.id] = {
           'type': 'google',
           'day': item.start.dateTime ? false : true,
-          'start': item.start.dateTime || item.start.date + 'T00:00:00+08:00',
-          'end': item.end.dateTime || item.end.date + 'T00:00:00+08:00',
+          'start': (item.start.dateTime ? item.start.date + 'T00:00:00+08:00' : item.start.dateTime) || '',
+          'end': (item.start.dateTime ? item.end.date + 'T00:00:00+08:00' : item.end.dateTime) || '',
           'title': item.summary,
           'location': item.location,
           'link': item.htmlLink
@@ -97,8 +97,8 @@ var parser = function (cb){
       events['facebook_' + item.id] = {
         'type': 'facebook',
         'day': item.is_date_only,
-        'start': item.is_date_only ? item.start_time + 'T00:00:00+08:00' : item.start_time,
-        'end': item.is_date_only ? item.end_time + 'T00:00:00+08:00' : item.end_time,
+        'start': (item.is_date_only ? item.start_time + 'T00:00:00+08:00' : item.start_time) || '',
+        'end': (item.is_date_only ? item.end_time + 'T00:00:00+08:00' : item.end_time) || '',
         'title': item.name,
         'location': item.location,
         'link': 'https://www.facebook.com/' + item.id + '/'
