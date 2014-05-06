@@ -133,8 +133,8 @@ var parser = function (cb){
                 },
                 'live': function(cb){
                     async.map(channel, function(item, cb){
-                        if ( fetch[item.type] ) {
-                            fetch[item.type](item.uid, cb);
+                        if ( fetch[item.attributes.type] ) {
+                            fetch[item.attributes.type](item.attributes.uid, cb);
                         }else{
                             cb(null, []);
                         }
@@ -148,9 +148,10 @@ var parser = function (cb){
                 var live = results['database'] || {};
                 var new_live = [];
 
+
                 results['live'].forEach(function(source, index){
                     source.forEach(function(active){
-                        var name = (active.type=='youtube' ? 'y' : 'u')+active.vid;
+                        var name = (active.type=='youtube' ? 'y_' : 'u_')+active.vid;
                         if ( !live[name] ) {
                             live[name] = {};
                             new_live.push(active);
@@ -158,7 +159,7 @@ var parser = function (cb){
                         for (key in active) {
                             live[name][key] = active[key];
                         }
-                        live[name]['logo'] = active.thumb || docs[index]['logo'];
+                        live[name]['logo'] = active.thumb || channel[index].attributes.logo;
                         live[name]['status'] = 'live';
                         live[name].updated_at = updated_at;
                         count += 1;

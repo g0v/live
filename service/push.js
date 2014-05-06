@@ -10,6 +10,8 @@ if ( !fs.existsSync('database.json') ) {
     fs.linkSync('database-sample.json', 'database.json');
 }
 
+var message = process.argv[2];
+
 var cfg = require('./database.json');
 
 var sendNotify = function(task, cb) {
