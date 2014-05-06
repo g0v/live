@@ -97,8 +97,8 @@ var parser = function (cb){
       events['facebook_' + item.id] = {
         'type': 'facebook',
         'day': item.is_date_only,
-        'start': (item.is_date_only ? item.start_time + 'T00:00:00+08:00' : item.start_time.replace(/\+0800$/,'+08:00')) || '',
-        'end': (item.is_date_only ? item.end_time + 'T00:00:00+08:00' : item.end_time.replace(/\+0800$/,'+08:00')) || '',
+        'start': (item.is_date_only ? item.start_time + 'T00:00:00+08:00' : (item.start_time+'').replace(/\+0800$/,'+08:00')) || '',
+        'end': (item.is_date_only ? item.end_time + 'T00:00:00+08:00' : (item.end_time+'').replace(/\+0800$/,'+08:00')) || '',
         'title': item.name || '',
         'location': item.location || '',
         'link': 'https://www.facebook.com/' + item.id + '/'
