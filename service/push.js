@@ -3,8 +3,7 @@ var https = require('https'),
     querystring = require('querystring'),
     async = require('async');
 
-var mongodb = require('mongodb'),
-    MongoClient = mongodb.MongoClient;
+var Parse = require('parse').Parse;
 
 if ( !fs.existsSync('database.json') ) {
     fs.linkSync('database-sample.json', 'database.json');
@@ -13,6 +12,11 @@ if ( !fs.existsSync('database.json') ) {
 var message = process.argv[2];
 
 var cfg = require('./database.json');
+
+Parse.initialize(cfg.live.appid, cfg.live.key, cfg.live.master);
+Parse.Cloud.useMasterKey();
+var Chrome_Token = Parse.Object.extend("chrome_token");
+var query = new Parse.Query(Chrome_Token);
 
 var sendNotify = function(task, cb) {
   var access = task.access;
@@ -104,21 +108,16 @@ getAccess({
     var queue = async.queue(function (task, callback) {
       sendNotify(task, callback);
     }, 5);
-    MongoClient.connect(cfg.chrome.mongo, function(err, db) {
 
-    var collection = db.collection('chrome_token')
-
-      collection.find({}).toArray(function(err, tokens) {
-        if (err) {
-          return console.error(err)
-        }
-        var count = tokens.length;
+    query.find({
+      success: function(results) {
+        var count = results.length;
         // queue.push({'access':access ,'token':'05561045968221820805/fhcffinobmpdchcoapdeoinhdmlihiok', 'msg':'『5/4(日)14:00』和平路過服務處，要求費鴻泰承諾「先立法，再審查」'}, function(err, task){
         //   console.log('completed!', task.token);
         //   process.exit(0);
         // });
-        tokens.forEach(function(item){
-          queue.push({'access':access ,'token':item.token, 'msg':'『5/4(日)14:00』和平路過服務處，要求費鴻泰承諾「先立法，再審查」'}, function (err, task) {
+        results.forEach(function(item){
+          queue.push({'access':access ,'token':item.attributes.token, 'msg':'『5/6』仿聲鳥正在松菸護樹現場表演'}, function (err, task) {
               console.log('completed!', task.token);
               count -= 1;
               if ( count < 1 ) {
@@ -126,7 +125,7 @@ getAccess({
               }
           });
         });
-      });
+      }
     });
   }
 });
